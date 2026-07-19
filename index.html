@@ -1,114 +1,662 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anthony Costa — Software Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1a1d24;
+    --bg-panel: #21252e;
+    --bg-panel-2: #262b35;
+    --line: #333947;
+    --text: #e8e6e1;
+    --text-muted: #8b93a7;
+    --text-dim: #565f74;
+    --amber: #d4a656;
+    --blue: #7aa2c9;
+    --diff-add: #7fa876;
+    --diff-del: #c17b6b;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
 
-  <head>
-  <meta charset="UTF-8">
-  <title>Anthony Costa – Portfolio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(131deg,rgba(237, 255, 252, 1) 0%, rgba(115, 249, 238, 1) 45%, rgba(43, 36, 255, 1) 100%);
-      color: #333;
-    }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
 
-    .container {
-      max-width: 800px;
-      margin: auto;
-      padding: 2em;
-    }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
 
-    h1 {
-      color: #1a1a1a;
-      font-size: 2.5em;
-      margin-bottom: 0.2em;
-    }
+  ::selection{ background: var(--amber); color: #1a1d24; }
 
-    h2 {
-      color: #333;
-      border-bottom: 2px solid #0073e6;
-      padding-bottom: 0.2em;
-      margin-top: 1.5em;
-    }
+  a{ color: var(--blue); text-decoration: none; }
+  a:hover{ text-decoration: underline; }
 
-    .section {
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 1.5em;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-      margin-bottom: 1.5em;
-    }
+  :focus-visible{
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+  }
 
-    ul {
-      padding-left: 1.2em;
-    }
+  .wrap{
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
 
-    li {
-      margin-bottom: 0.5em;
-    }
+  /* ---------- top bar: fake editor tabs ---------- */
+  .tabbar{
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(26,29,36,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .tabbar-inner{
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tabbar-inner::-webkit-scrollbar{ display:none; }
+  .tab{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-dim);
+    padding: 14px 16px;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    cursor: pointer;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .tab:hover{ color: var(--text-muted); }
+  .tab.active{ color: var(--amber); border-bottom-color: var(--amber); }
 
-    a {
-      color: #0073e6;
-      text-decoration: none;
-    }
+  /* ---------- hero ---------- */
+  .hero{
+    padding: 90px 0 70px;
+  }
+  .prompt-line{
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 18px;
+  }
+  .prompt-line .sigil{ color: var(--diff-add); }
 
-    a:hover {
-      text-decoration: underline;
-    }
+  .hero h1{
+    font-family: var(--mono);
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 700;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 .cursor{
+    display:inline-block;
+    width: 0.5ch;
+    background: var(--amber);
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+  }
+  @keyframes blink{ 50%{ opacity: 0; } }
 
-    .tagline {
-      color: #555;
-      font-size: 1.2em;
-      margin-bottom: 1em;
-    }
+  .hero .role{
+    font-family: var(--mono);
+    font-size: clamp(15px, 2vw, 18px);
+    color: var(--blue);
+    margin: 0 0 22px;
+  }
+  .hero .tagline{
+    max-width: 56ch;
+    color: var(--text-muted);
+    font-size: 16px;
+    margin: 0 0 30px;
+  }
 
-    @media (max-width: 600px) {
-      .container {
-        padding: 1em;
-      }
-    }
-  </style>
+  .hero-links{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .flag{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-muted);
+    border: 1px solid var(--line);
+    padding: 7px 12px;
+    border-radius: 5px;
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .flag:hover{
+    border-color: var(--amber);
+    color: var(--amber);
+    background: rgba(212,166,86,0.06);
+    text-decoration: none;
+  }
+  .flag b{ color: var(--diff-add); font-weight: 600; }
+
+  /* ---------- generic section scaffolding ---------- */
+  section{ padding: 54px 0; border-top: 1px solid var(--line); }
+  .reveal{ opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease; }
+  .reveal.in{ opacity: 1; transform: none; }
+
+  .sec-head{
+    display:flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .sec-num{
+    font-family: var(--mono);
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  .sec-head h2{
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+  }
+  .sec-head .file-ext{ color: var(--text-dim); font-weight: 400; }
+
+  /* ---------- about: comment block ---------- */
+  .comment-block{
+    font-family: var(--mono);
+    font-size: 14.5px;
+    color: var(--text-muted);
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px 26px;
+    line-height: 1.75;
+  }
+  .comment-block .tok{ color: var(--diff-add); }
+  .comment-block p{ margin: 0 0 12px; }
+  .comment-block p:last-child{ margin-bottom: 0; }
+
+  /* ---------- career changelog (signature element) ---------- */
+  .log{
+    display: flex;
+    flex-direction: column;
+  }
+  .log-entry{
+    display: grid;
+    grid-template-columns: 84px 1fr auto;
+    gap: 16px;
+    align-items: start;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .log-entry:last-child{ border-bottom: none; }
+  .log-hash{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--amber);
+    padding-top: 2px;
+  }
+  .log-body h3{
+    margin: 0 0 4px;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .log-body .log-meta{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .log-body p{
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 14.5px;
+    max-width: 52ch;
+  }
+  .diffstat{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    padding-top: 3px;
+    white-space: nowrap;
+  }
+  .diffstat .bars{ display:flex; gap: 2px; }
+  .diffstat .bar{
+    width: 6px; height: 10px; border-radius: 1px;
+    background: var(--line);
+  }
+  .diffstat .bar.add{ background: var(--diff-add); }
+  .diffstat .bar.del{ background: var(--diff-del); }
+  .diffstat .add-count{ color: var(--diff-add); }
+  .diffstat .del-count{ color: var(--diff-del); }
+
+  /* ---------- projects: file tree ---------- */
+  .tree{
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .file-row{
+    display: grid;
+    grid-template-columns: 20px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 18px;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    user-select: none;
+  }
+  .file-row:last-child{ border-bottom: none; }
+  .file-row:hover{ background: var(--bg-panel-2); }
+  .file-row .caret{
+    font-family: var(--mono);
+    color: var(--text-dim);
+    transition: transform .18s ease;
+    font-size: 12px;
+  }
+  .file-row.open .caret{ transform: rotate(90deg); color: var(--amber); }
+  .file-name{
+    font-family: var(--mono);
+    font-size: 14.5px;
+  }
+  .file-name .ext{ color: var(--blue); }
+  .file-tag{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    border: 1px solid var(--line);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .file-detail{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .25s ease;
+    background: #1d212a;
+  }
+  .file-row.open + .file-detail{ max-height: 220px; }
+  .file-detail-inner{
+    padding: 18px 18px 22px 50px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  .file-detail-inner p{ margin: 0 0 12px; max-width: 58ch; }
+  .stack-list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .stack-pill{
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--amber);
+    background: rgba(212,166,86,0.08);
+    border: 1px solid rgba(212,166,86,0.25);
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+  .file-detail-inner a{ font-family: var(--mono); font-size: 13px; }
+
+  /* ---------- skills: import list ---------- */
+  .imports{
+    font-family: var(--mono);
+    font-size: 14px;
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px 26px;
+    overflow-x: auto;
+  }
+  .imports .kw{ color: var(--blue); }
+  .imports .grp{ color: var(--text-dim); }
+  .imports .pkg{ color: var(--text); }
+  .imports div{ white-space: pre; padding: 2px 0; }
+
+  /* ---------- contact: terminal ---------- */
+  .terminal{
+    background: #15181f;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .terminal-bar{
+    display: flex;
+    gap: 7px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .dot{ width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+  .terminal-body{
+    padding: 22px 26px 26px;
+    font-family: var(--mono);
+    font-size: 14.5px;
+  }
+  .terminal-body .line{ margin-bottom: 10px; color: var(--text-muted); }
+  .terminal-body .out{ color: var(--text); }
+  .terminal-body .sigil{ color: var(--diff-add); }
+  .copy-email{
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--blue);
+    font-family: var(--mono);
+    font-size: 14px;
+    padding: 4px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 4px;
+  }
+  .copy-email:hover{ border-color: var(--blue); }
+  .copy-email.copied{ color: var(--diff-add); border-color: var(--diff-add); }
+
+  footer{
+    padding: 34px 0 50px;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  @media (max-width: 600px){
+    .log-entry{ grid-template-columns: 1fr; }
+    .diffstat{ padding-top: 0; }
+    .file-detail-inner{ padding-left: 22px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+    .reveal{ opacity: 1; transform: none; }
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Anthony Costa</h1>
-    <p class="tagline"><strong>CS Graduate | Aspiring Software Developer</strong></p>
 
-    <div class="section">
-      <h2>About Me</h2>
-      <p>I am a Computer Science graduate from SUNY Farmingdale, building Java applications. I enjoy solving real-world problems through code.</p>
-    </div>
-
-    <div class="section">
-      <h2>Projects</h2>
-      <ul>
-        <li><strong>AXELA- AI Assistant:</strong> An AI-powered desktop assistant that executes system-level tasks through natural language prompts. <a href="https://github.com/N0zkill/Axela" target="_blank">View on GitHub</a></li>
-        <li><strong>CSC311 Capstone:</strong> Invoice system built with JavaFX and MySQL. <a href="https://github.com/Kinglos01/Capstone-Project" target="_blank">View on GitHub</a></li>
-        <li><strong>Small Platformer Style Game:</strong> JavaFX app with FXML controller and logic. <a href="https://github.com/CostaAnthony/LostInTheSauce" target="_blank">View on GitHub</a></li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <h2>What I Can Do</h2>
-      <ul>
-        <li>Java / JavaFX Development (GUI apps, DB connectivity)</li>
-        <li>MySQL Database Design & Queries</li>
-        <li>Basic UI/UX Design with FXML and CSS</li>
-        <li>Web design using HTML/PHP</li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <h2>Connect with Me</h2>
-      <p><i class="fab fa-linkedin" aria-hidden="true"></i>
-        LinkedIn: <a href="https://www.linkedin.com/in/anthony-costa-z28/" target="_blank">linkedin.com/in/anthony-costa</a></p>
-      <p><i class="fa-solid fa-envelope"></i>
-        Email: <a href= "mailto:costa18@farmingdale.edu " target="_blank">costa18@farmingdale.edu</a></p>
-    </div>
+<div class="tabbar">
+  <div class="tabbar-inner">
+    <button class="tab active" onclick="document.getElementById('top').scrollIntoView()">whoami.sh</button>
+    <button class="tab" onclick="document.getElementById('about').scrollIntoView()">about.md</button>
+    <button class="tab" onclick="document.getElementById('experience').scrollIntoView()">career.log</button>
+    <button class="tab" onclick="document.getElementById('projects').scrollIntoView()">projects/</button>
+    <button class="tab" onclick="document.getElementById('skills').scrollIntoView()">stack.json</button>
+    <button class="tab" onclick="document.getElementById('contact').scrollIntoView()">contact.sh</button>
   </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top" style="border-top:none;">
+    <div class="prompt-line"><span class="sigil">➜</span> ~ whoami</div>
+    <h1 id="typed-name">Anthony Costa<span class="cursor">&nbsp;</span></h1>
+    <p class="role">CS Graduate — Aspiring Software Developer &amp; developer tools</p>
+    <p class="tagline">
+      I am a Computer Science graduate from SUNY Farmingdale, building Java applications. 
+      I enjoy building meaningful and cool solutions to real-world problems using technology.
+    </p>
+    <div class="hero-links">
+      <a class="flag" href="https://github.com/CostaAnthony" target="_blank" rel="noopener">--github</a>
+      <a class="flag" href="www.linkedin.com/in/anthony-costa-z28" target="_blank" rel="noopener">--linkedin</a>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about">
+    <div class="sec-head reveal">
+      <span class="sec-num">01</span>
+      <h2>about <span class="file-ext">.md</span></h2>
+    </div>
+    <div class="comment-block reveal">
+      <p>/* A few things worth knowing */</p>
+      <p><span class="tok">const</span> background = "I've always been good with technology, figuring out how things work and building 
+        things with it just came naturally, which is what pulled me into coding in the first place.";</p>
+      <p><span class="tok">const</span> experience = "Through college I've touched a bit of everything: IT troubleshooting, hardware, backend, frontend. 
+        Lately I've been leaning frontend. I like the challenge of making something look good and work well.";</p>
+      <p><span class="tok">const</span> interests = "["3D printing/modeling", "tinkering with hardware", "messing with random programs just to see how they work"]";</p>
+      <p><span class="tok">const</span> currently = "Developing my skills and exploring a handful of different languages and looking for a chance to put 
+        what I've learned to real use.";</p>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE / CHANGELOG ============ -->
+  <section id="experience">
+    <div class="sec-head reveal">
+      <span class="sec-num">02</span>
+      <h2>career <span class="file-ext">.log</span></h2>
+    </div>
+    <div class="log reveal">
+
+      <div class="log-entry">
+        <div class="log-hash">a3f9c1e</div>
+        <div class="log-body">
+          <h3>IT Technichian @ Trident Technical College</h3>
+          <div class="log-meta">2026 — present</div>
+          <p>Provide tier 1 helpdesk support, handling tickets from students and staff for issues like password resets, login problems, and device malfunctions. When an issue 
+            is outside my scope, I escalate/reroute it to the correct team. Throughout all this, I focus on fast, efficient responses paired with strong customer service.</p>
+        </div>
+        <div class="diffstat">
+          <span class="add-count">+284</span><span class="del-count">-61</span>
+          <div class="bars">
+            <div class="bar add"></div><div class="bar add"></div><div class="bar add"></div>
+            <div class="bar add"></div><div class="bar del"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="log-entry">
+        <div class="log-hash">7d2e08b</div>
+        <div class="log-body">
+          <h3>Web Developer Internship @ Kelm Media</h3>
+          <div class="log-meta">2025 — 2025</div>
+          <p>Improved and maintained multiple websites by fixing bugs, updating legacy designs, and enhancing usability. Redesigned pages using HTML, CSS, PHP, and regular
+            expressions, built reusable components, and collaborated with team members to resolve validation and security issues across desktop and mobile platforms.</p>
+        </div>
+        <div class="diffstat">
+          <span class="add-count">+198</span><span class="del-count">-34</span>
+          <div class="bars">
+            <div class="bar add"></div><div class="bar add"></div><div class="bar add"></div>
+            <div class="bar del"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="log-entry">
+        <div class="log-hash">1b6f42a</div>
+        <div class="log-body">
+          <h3>Sales Consultant @ Men's Wearhouse</h3>
+          <div class="log-meta">2022 — 2025</div>
+          <p>Delivered personalized customer service by assisting clients with suit and tuxedo fittings, handling inquiries and complaints, and ensuring a positive 
+            shopping experience. Collaborated with team members to manage inventory, maintain store organization, and balance customer needs with sales goals.</p>
+        </div>
+        <div class="diffstat">
+          <span class="add-count">+92</span><span class="del-count">-12</span>
+          <div class="bars">
+            <div class="bar add"></div><div class="bar add"></div><div class="bar del"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section id="projects">
+    <div class="sec-head reveal">
+      <span class="sec-num">03</span>
+      <h2>projects <span class="file-ext">/</span></h2>
+    </div>
+    <div class="tree reveal">
+
+      <div class="file-row" onclick="toggleFile(this)">
+        <span class="caret">▸</span>
+        <span class="file-name">Axela - AI Computer Assistant<span class="ext">.py</span></span>
+        <span class="file-tag">frontend</span>
+      </div>
+      <div class="file-detail">
+        <div class="file-detail-inner">
+          <p>AI-powered desktop assistant that executes system-level tasks through natural language prompts.</p>
+          <div class="stack-list">
+            <span class="stack-pill">React Native</span>
+            <span class="stack-pill">Python</span>
+          </div>
+          <a href="https://github.com/N0zkill/Axela" target="_blank" rel="noopener">view repository →</a>
+        </div>
+      </div>
+
+      <div class="file-row" onclick="toggleFile(this)">
+        <span class="caret">▸</span>
+        <span class="file-name">CSC311 Capstone Project<span class="ext">.ts</span></span>
+        <span class="file-tag">full-stack</span>
+      </div>
+      <div class="file-detail">
+        <div class="file-detail-inner">
+          <p>Automated Inventory System using JavaFX & MySQL.</p>
+          <div class="stack-list">
+            <span class="stack-pill">JavaFX</span>
+            <span class="stack-pill">MySQL</span>
+          </div>
+          <a href="https://github.com/Kinglos01/Capstone-Project" target="_blank" rel="noopener">view repository →</a>
+        </div>
+      </div>
+
+      <div class="file-row" onclick="toggleFile(this)">
+        <span class="caret">▸</span>
+        <span class="file-name">Small Platformer Style Game<span class="ext">.go</span></span>
+        <span class="file-tag">full-stack</span>
+      </div>
+      <div class="file-detail">
+        <div class="file-detail-inner">
+          <p>Platformer style game built with FXML and JavaFX.</p>
+          <div class="stack-list">
+            <span class="stack-pill">FXML</span>
+            <span class="stack-pill">JavaFX</span>
+          </div>
+          <a href="https://github.com/CostaAnthony/LostInTheSauce" target="_blank" rel="noopener">view repository →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ SKILLS ============ -->
+  <section id="skills">
+    <div class="sec-head reveal">
+      <span class="sec-num">04</span>
+      <h2>stack <span class="file-ext">.json</span></h2>
+    </div>
+    <div class="imports reveal">
+<div><span class="grp">// languages</span></div>
+<div><span class="kw">import</span> { <span class="pkg">Java, Python, JavaScript, SQL, JavaFX, HTML</span> } <span class="kw">from</span> "languages"</div>
+<div>&nbsp;</div>
+<div><span class="grp">// frameworks &amp; infra</span></div>
+<div><span class="kw">import</span> { <span class="pkg">FastAPI, React, PostgreSQL</span> } <span class="kw">from</span> "tools"</div>
+<div>&nbsp;</div>
+<div><span class="grp">// currently learning</span></div>
+<div><span class="kw">import</span> { <span class="pkg">C++, Mobile App Devlopment, Flutter</span> } <span class="kw">from</span> "growth"</div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact">
+    <div class="sec-head reveal">
+      <span class="sec-num">05</span>
+      <h2>contact <span class="file-ext">.sh</span></h2>
+    </div>
+    <div class="terminal reveal">
+      <div class="terminal-bar">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+      <div class="terminal-body">
+        <div class="line"><span class="sigil">➜</span> ~ cat contact.sh</div>
+        <div class="line out">Open to new roles and interesting problems.</div>
+        <div class="line"><span class="sigil">➜</span> ~ open <a href="https://github.com/yourusername" target="_blank" rel="noopener">github.com/CostaAnthony</a></div>
+        <div class="line"><span class="sigil">➜</span> ~ open <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener">www.linkedin.com/in/anthony-costa-z28</a></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>Thanks for stopping by!</footer>
+
+<script>
+  // typewriter on the hero name
+  (function(){
+    var el = document.getElementById('typed-name');
+    var full = "Your Name";
+    var cursor = '<span class="cursor">&nbsp;</span>';
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    el.innerHTML = cursor;
+    var i = 0;
+    function tick(){
+      i++;
+      el.innerHTML = full.slice(0, i) + cursor;
+      if (i < full.length) setTimeout(tick, 55);
+    }
+    setTimeout(tick, 300);
+  })();
+
+  // scroll reveal
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting){ e.target.classList.add('in'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(function(el){ observer.observe(el); });
+
+  // active tab on scroll
+  var sections = ['top','about','experience','projects','skills','contact'];
+  var tabs = document.querySelectorAll('.tab');
+  var tabObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting){
+        var idx = sections.indexOf(entry.target.id);
+        tabs.forEach(function(t, i){ t.classList.toggle('active', i === idx); });
+      }
+    });
+  }, { threshold: 0.5, rootMargin: "-80px 0px -60% 0px" });
+  sections.forEach(function(id){
+    var s = document.getElementById(id);
+    if (s) tabObserver.observe(s);
+  });
+
+  // project file rows
+  function toggleFile(row){
+    var wasOpen = row.classList.contains('open');
+    document.querySelectorAll('.file-row.open').forEach(function(r){ r.classList.remove('open'); });
+    if (!wasOpen) row.classList.add('open');
+  }
+
+  // copy email
+  function copyEmail(btn){
+    var email = "you@example.com";
+    navigator.clipboard && navigator.clipboard.writeText(email).catch(function(){});
+    btn.textContent = "copied ✓";
+    btn.classList.add('copied');
+    setTimeout(function(){
+      btn.textContent = email + " — copy";
+      btn.classList.remove('copied');
+    }, 1600);
+  }
+</script>
 
 </body>
 </html>
